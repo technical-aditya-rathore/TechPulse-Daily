@@ -1,0 +1,127 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TechPulse Daily</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        body.dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
+        .dark-toggle {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+        }
+        .search-bar {
+            margin: 20px;
+            text-align: center;
+        }
+        .news-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .news-item {
+            width: 300px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .news-item img {
+            max-width: 100%;
+            height: auto;
+        }
+        footer {
+            background-color: #222;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="dark-toggle">
+        <button onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
+    </div>
+
+    <header style="display: flex; align-items: center; padding: 10px;">
+        <img src="news_logo.jpg" alt="TechPulse Daily" style="height: 50px; margin-right: 15px;" />
+        <h1>TechPulse Daily</h1>
+    </header>
+
+    <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Search tech news..." />
+        <button onclick="searchNews()">Search</button>
+    </div>
+
+    <div class="news-container" id="news-container">Loading news...</div>
+
+    <h2 style="text-align:center;">Subscribe to Our Newsletter</h2>
+    <iframe src="https://forms.gle/DeB7yapXqPuhHjrh6">Loading…</iframe>
+
+    <footer>
+        <p>Owned by Aditya Kumar Jha – Developer of this news website</p>
+        <p>Copyright @ Adi Group Private Limited</p>
+        <p>Disclaimer: The content displayed is for informational purposes only.</p>
+        <p>Contact: adityatechno663@gmail.com</p>
+        <p>
+            <a href="https://github.com/technical-aditya-rathore" style="color: #ccc;">GitHub</a> |
+            <a href="https://www.linkedin.com/in/adityakumarjha999" style="color: #ccc;">LinkedIn</a>
+        </p>
+    </footer>
+
+    <script>
+        const apiKey = "9f382f2fd08b45d4a9fdea8368d76c8d";
+        const newsContainer = document.getElementById("news-container");
+
+        async function fetchNews(query = "technology") {
+            newsContainer.innerHTML = "Loading...";
+            const url = `https://newsapi.org/v2/everything?q=${query}&apiKey=${apiKey}`;
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                if (data.articles.length > 0) {
+                    newsContainer.innerHTML = "";
+                    data.articles.slice(0, 10).forEach(article => {
+                        const div = document.createElement("div");
+                        div.className = "news-item";
+                        div.innerHTML = `
+                            <h3>${article.title}</h3>
+                            <img src="${article.urlToImage || ''}" alt="News Image" />
+                            <p>${article.description || ''}</p>
+                            <a href="${article.url}" target="_blank">Read more</a>
+                        `;
+                        newsContainer.appendChild(div);
+                    });
+                } else {
+                    newsContainer.innerHTML = "No news found.";
+                }
+            } catch (error) {
+                newsContainer.innerHTML = "Failed to fetch news.";
+            }
+        }
+
+        function searchNews() {
+            const query = document.getElementById("search-input").value.trim();
+            if (query) fetchNews(query);
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark-mode");
+        }
+
+        fetchNews();
+    </script>
+</body>
+</html>
