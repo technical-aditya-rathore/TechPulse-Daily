@@ -38,7 +38,7 @@ Deployed with **Vercel** for seamless CI/CD and optimized for performance & acce
 
 ---
 
-## 📂 Project Structure
+
 
 
 
